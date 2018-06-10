@@ -11,32 +11,7 @@
 #include "fileBrowser.h"
 
 static
-int writePid(const char* file)
-{
-    char filename[256] = {0};
-    char pid[256] = {0};
-    int pid_len;
-    int fd;
-
-    snprintf(filename, sizeof(filename)-1, "/var/lock/%s.pid", file);
-    pid_len = snprintf(pid, sizeof(pid)-1, "%lu", (unsigned long)getpid());
-
-    if ((fd=open(filename, O_RDWR|O_CREAT|O_TRUNC, 0644)) < 0) {
-        return -1;
-    }
-
-    if (write(fd, pid, pid_len)!=pid_len) {
-        close(fd);
-        unlink(filename);
-        return -1;
-    }
-    close(fd);
-
-    return 0;
-}
-
-static
-void infiniteMsgLoop()
+void infiniteLoop()
 {
     while(1) {
         sleep(1);
@@ -44,16 +19,16 @@ void infiniteMsgLoop()
 }
 
 static
-int startFileBrowserMgr()
+int startFileBrowser()
 {
     try {
-        fileBrowser *fileBrowserMain = fileBrowser::getInstance();
+        fileBrowser *pFileBrowser = fileBrowser::getInstance();
 
-        fileBrowserMain->init();
+        pFileBrowser->init();
         
         printf("fileBrowser start successfully!\n");
 
-        infiniteMsgLoop();
+        infiniteLoop();
     }
 
     catch (...) {
@@ -65,10 +40,7 @@ int startFileBrowserMgr()
 
 int main(int argc, char *argv[])
 {
-    writePid("fileBrowser");
-    signal(SIGPIPE, SIG_IGN); 
-
-    startFileBrowserMgr();
+    startFileBrowser();
 
     return 0;
 }
