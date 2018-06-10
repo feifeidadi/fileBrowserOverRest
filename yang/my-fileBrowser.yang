@@ -1,0 +1,75 @@
+module my-fileBrowser {
+	namespace "urn:my:my-fileBrowser";
+	prefix "my-fileBrowser";
+
+	import ietf-yang-types {
+		prefix yang;
+	}
+
+	import tailf-common {
+		prefix tailf;
+	}
+
+	description
+		"This module contains API definitions to browser files
+		 under specified session/vnf through confd Restful interface.";
+
+	revision 2018-05-01 {
+		description "Initial revision";
+	}
+
+	typedef result-t {
+		type enumeration {
+			enum failure;
+			enum success;
+		}
+	}
+
+	container file-browser {
+		tailf:callpoint fileBrowserCP;
+		container sessions {
+			list session {
+				key "session-id";
+				max-elements 1024;
+
+				leaf session-id {
+					type uint32;
+					description "The session-id.";
+				}
+				container vnfs {
+					list vnf {
+						key "vnf-id";
+						max-elements 256;
+						leaf vnf-id {
+							type uint32;
+							description 
+								"The identifier of a VNF that has saved data to server for the session";
+						}
+						container files {
+							list file {
+								key "filename";
+								max-elements 1024;
+
+								leaf filename {
+									type string;
+									description 
+										"The name of the file as it exists in server storage.";
+								}
+								leaf size {
+									type uint32;
+									description 
+										"The size of the file.";
+								}
+								leaf creation-timestamp {
+									type string;
+									description 
+										"The timestamp of when the file was created.";
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

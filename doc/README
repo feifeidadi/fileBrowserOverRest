@@ -1,0 +1,5 @@
+File browser utility can be used for viewing files under specified (session/vnf) direcotry through confd Restful interface.
+
+TODO:
+  1) Functionality of downloading or deleting file are not finished yet (src/fileBrowserActionPoint.cpp)
+
